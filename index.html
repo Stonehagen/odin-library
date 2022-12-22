@@ -12,6 +12,28 @@
     <div class="container">
         <div class="header">
             <h1>Library</h1>
+            <div class="add-book">
+                <button class="add-book-button">NEW BOOK</button>
+                <form action="POST" class="add-book-form">
+                    <div class="form-wrap">
+                        <label for="title">Title</label>
+                        <input type="text" id="title" name="title">
+                    </div>
+                    <div class="form-wrap">
+                        <label for="author">Author</label>
+                        <input type="text" id="author" name="author">
+                    </div>
+                    <div class="form-wrap">
+                        <label for="title">Pages</label>
+                        <input type="number" id="pages" name="pages">
+                    </div>
+                    <div class="form-wrap">
+                        <label for="read">Read</label>
+                        <input type="checkbox" name="read" id="read">
+                    </div>
+                    <button type="submit">ADD BOOK</button>
+                </form>
+            </div>
         </div>
         <div class="table-container">
             <table>
@@ -34,21 +56,6 @@
                     <td>no</td>
                 </tr>
             </table>
-        </div>
-        <div class="controls">
-            <div class="add-book">
-                <button>Add Book</button>
-            </div>
-            <form action="POST">
-                <label for="title">Title</label>
-                <input type="text" id="title" name="title">
-                <label for="author">Author</label>
-                <input type="text" id="author" name="author">
-                <label for="title">Pages</label>
-                <input type="number" id="pages" name="pages">
-                <label for="read">Read</label>
-                <input type="checkbox" name="read" id="read">
-            </form>
         </div>
     </div>
 </body>
