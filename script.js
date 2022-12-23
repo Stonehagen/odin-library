@@ -58,6 +58,7 @@ function displayLibrary() {
       if (key === 'read') {
         const readButton = getHtmlTag('button', book[key]);
         readButton.addEventListener('click', () => {
+          // eslint-disable-next-line operator-linebreak
           myLibrary[index][key] =
             myLibrary[index][key] === 'yes' ? 'no' : 'yes';
           return displayLibrary();
