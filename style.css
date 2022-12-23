@@ -40,7 +40,7 @@ h1 {
   height: 26px;
 }
 
-.add-book button {
+button {
   margin: 0;
   border-radius: 20px;
   border: none;
@@ -50,7 +50,7 @@ h1 {
   font-weight: bold;
 }
 
-.add-book button:hover {
+button:hover {
   background-color: rgb(251, 146, 41);
 }
 
@@ -93,6 +93,13 @@ h1 {
 .table-container th {
   text-align: left;
   font-size: 20px;
+}
+
+.read-button {
+  width: 50px;
+  height: 20px;
+  font-size: 12px;
+  margin: 0px 5px ;
 }
 
 label {

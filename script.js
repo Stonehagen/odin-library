@@ -32,6 +32,7 @@ function addBookToLibrary() {
 
 function getHtmlTag(tag, insideHtml) {
   const headingCol = document.createElement(tag);
+  headingCol.classList.add('read-button');
   headingCol.innerHTML = insideHtml;
   return headingCol;
 }
@@ -51,10 +52,20 @@ function wipeTable() {
 
 function displayLibrary() {
   wipeTable();
-  myLibrary.forEach((book) => {
+  myLibrary.forEach((book, index) => {
     const tableRow = document.createElement('tr');
     Object.keys(book).forEach((key) => {
-      tableRow.appendChild(getHtmlTag('td', book[key]));
+      if (key === 'read') {
+        const readButton = getHtmlTag('button', book[key]);
+        readButton.addEventListener('click', () => {
+          myLibrary[index][key] =
+            myLibrary[index][key] === 'yes' ? 'no' : 'yes';
+          return displayLibrary();
+        });
+        tableRow.appendChild(readButton);
+      } else {
+        tableRow.appendChild(getHtmlTag('td', book[key]));
+      }
     });
     table.appendChild(tableRow);
   });
