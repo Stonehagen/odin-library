@@ -1,94 +1,156 @@
-const newBookBtn = document.querySelector('.new-book-button');
-const addBookForm = document.querySelector('.add-book-form');
-const addBookBtn = document.querySelector('.add-book-button');
+/* eslint-disable no-use-before-define */
+/* eslint-disable wrap-iife */
 
-const titleInput = document.querySelector('#title');
-const authorInput = document.querySelector('#author');
-const pagesInput = document.querySelector('#pages');
-const readInput = document.querySelector('#read');
+class Library {
+  Library = [];
 
-const table = document.querySelector('.table');
+  Header = ['Title', 'Author', 'Pages', 'Read'];
 
-const myLibrary = [];
+  constructor() {
+    this.Library = [];
+  }
 
-const tableHeader = ['Title', 'Author', 'Pages', 'Read'];
+  get tableHeader() {
+    return this.Header;
+  }
 
-function Book(title, author, pages, read) {
-  this.title = title;
-  this.author = author;
-  this.pages = pages;
-  this.read = read;
-}
+  addBookToLibrary(title, author, pages, read) {
+    const newBook = {
+      title,
+      author,
+      pages,
+      read: read ? 'yes' : 'no',
+    };
+    this.Library.push(newBook);
+  }
 
-function addBookToLibrary() {
-  const newBook = new Book(
-    titleInput.value,
-    authorInput.value,
-    pagesInput.value,
-    readInput.checked ? 'yes' : 'no',
-  );
-  myLibrary.push(newBook);
-}
-
-function getHtmlTag(tag, insideHtml) {
-  const headingCol = document.createElement(tag);
-  headingCol.classList.add('read-button');
-  headingCol.innerHTML = insideHtml;
-  return headingCol;
-}
-
-function getTitleRow() {
-  const tableRow = document.createElement('tr');
-  tableHeader.forEach((header) => {
-    tableRow.appendChild(getHtmlTag('th', header));
-  });
-  return tableRow;
-}
-
-function wipeTable() {
-  table.innerHTML = '';
-  table.appendChild(getTitleRow());
-}
-
-function displayLibrary() {
-  wipeTable();
-  myLibrary.forEach((book, index) => {
-    const tableRow = document.createElement('tr');
-    Object.keys(book).forEach((key) => {
-      if (key === 'read') {
-        const readButton = getHtmlTag('button', book[key]);
-        readButton.addEventListener('click', () => {
-          // eslint-disable-next-line operator-linebreak
-          myLibrary[index][key] =
-            myLibrary[index][key] === 'yes' ? 'no' : 'yes';
-          return displayLibrary();
-        });
-        tableRow.appendChild(readButton);
-      } else {
-        tableRow.appendChild(getHtmlTag('td', book[key]));
-      }
+  getTable(table) {
+    this.Library.forEach((book, index) => {
+      const tableRow = document.createElement('tr');
+      Object.keys(book).forEach((key) => {
+        if (key === 'read') {
+          const readButton = DisplayController.getHtmlTag('button', book[key]);
+          EventController.addReadEL(readButton, index, key);
+          tableRow.appendChild(readButton);
+        } else {
+          tableRow.appendChild(DisplayController.getHtmlTag('td', book[key]));
+        }
+      });
+      table.appendChild(tableRow);
     });
-    table.appendChild(tableRow);
-  });
+  }
 }
 
-function clearForm() {
-  titleInput.value = '';
-  authorInput.value = '';
-  pagesInput.value = '';
-  readInput.checked = false;
-}
+const newlibrary = new Library();
 
-newBookBtn.addEventListener('click', () => {
-  newBookBtn.style.display = 'none';
-  addBookForm.style.display = 'flex';
-});
+const HtmlSelector = (function getHtmlSelector() {
+  const newBookBtn = document.querySelector('.new-book-button');
+  const addBookForm = document.querySelector('.add-book-form');
+  const addBookBtn = document.querySelector('.add-book-button');
 
-addBookBtn.addEventListener('click', (e) => {
-  e.preventDefault();
-  newBookBtn.style.display = 'block';
-  addBookForm.style.display = 'none';
-  addBookToLibrary();
-  displayLibrary();
-  clearForm();
-});
+  const titleInput = document.querySelector('#title');
+  const authorInput = document.querySelector('#author');
+  const pagesInput = document.querySelector('#pages');
+  const readInput = document.querySelector('#read');
+
+  const table = document.querySelector('.table');
+
+  return {
+    newBookBtn,
+    addBookForm,
+    addBookBtn,
+    titleInput,
+    authorInput,
+    pagesInput,
+    readInput,
+    table,
+  };
+})();
+
+const EventController = (function getEventController() {
+  const addReadEL = (button, index, key) => {
+    button.addEventListener('click', () => {
+      // eslint-disable-next-line operator-linebreak
+      newlibrary.Library[index][key] =
+        newlibrary.Library[index][key] === 'yes' ? 'no' : 'yes';
+      DisplayController.displayLibrary();
+    });
+  };
+
+  const newBookEL = () => {
+    HtmlSelector.newBookBtn.addEventListener('click', () => {
+      HtmlSelector.newBookBtn.style.display = 'none';
+      HtmlSelector.addBookForm.style.display = 'flex';
+    });
+  };
+
+  const addBookEL = () => {
+    HtmlSelector.addBookBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      HtmlSelector.newBookBtn.style.display = 'block';
+      HtmlSelector.addBookForm.style.display = 'none';
+      newlibrary.addBookToLibrary(
+        HtmlSelector.titleInput.value,
+        HtmlSelector.authorInput.value,
+        HtmlSelector.pagesInput.value,
+        HtmlSelector.readInput.checked,
+      );
+      DisplayController.displayLibrary();
+      DisplayController.clearForm();
+    });
+  };
+
+  return {
+    addReadEL,
+    newBookEL,
+    addBookEL,
+  };
+})();
+
+const DisplayController = (function getDisplayController() {
+  const clearForm = () => {
+    HtmlSelector.titleInput.value = '';
+    HtmlSelector.authorInput.value = '';
+    HtmlSelector.pagesInput.value = '';
+    HtmlSelector.readInput.checked = false;
+  };
+
+  const getHtmlTag = (tag, insideHtml) => {
+    const headingCol = document.createElement(tag);
+    headingCol.classList.add('read-button');
+    headingCol.innerHTML = insideHtml;
+    return headingCol;
+  };
+
+  const getTitleRow = () => {
+    const tableRow = document.createElement('tr');
+    newlibrary.tableHeader.forEach((header) => {
+      tableRow.appendChild(getHtmlTag('th', header));
+    });
+    return tableRow;
+  };
+
+  const wipeTable = () => {
+    HtmlSelector.table.innerHTML = '';
+    HtmlSelector.table.appendChild(getTitleRow());
+  };
+
+  const displayLibrary = () => {
+    wipeTable();
+    newlibrary.getTable(HtmlSelector.table);
+  };
+
+  const initiate = () => {
+    EventController.newBookEL();
+    EventController.addBookEL();
+  };
+
+  return {
+    clearForm,
+    displayLibrary,
+    initiate,
+    getHtmlTag,
+  };
+})();
+
+DisplayController.initiate();
