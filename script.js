@@ -87,16 +87,30 @@ const EventController = (function getEventController() {
   const addBookEL = () => {
     HtmlSelector.addBookBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      HtmlSelector.newBookBtn.style.display = 'block';
-      HtmlSelector.addBookForm.style.display = 'none';
-      newlibrary.addBookToLibrary(
-        HtmlSelector.titleInput.value,
-        HtmlSelector.authorInput.value,
-        HtmlSelector.pagesInput.value,
-        HtmlSelector.readInput.checked,
-      );
-      DisplayController.displayLibrary();
-      DisplayController.clearForm();
+      if (HtmlSelector.addBookForm.checkValidity()) {
+        HtmlSelector.newBookBtn.style.display = 'block';
+        HtmlSelector.addBookForm.style.display = 'none';
+        newlibrary.addBookToLibrary(
+          HtmlSelector.titleInput.value,
+          HtmlSelector.authorInput.value,
+          HtmlSelector.pagesInput.value,
+          HtmlSelector.readInput.checked,
+        );
+        DisplayController.displayLibrary();
+        DisplayController.clearForm();
+      }
+      HtmlSelector.titleInput.classList.remove('invalid');
+      HtmlSelector.authorInput.classList.remove('invalid');
+      HtmlSelector.pagesInput.classList.remove('invalid');
+      if (!HtmlSelector.titleInput.checkValidity()) {
+        HtmlSelector.titleInput.classList.add('invalid');
+      }
+      if (!HtmlSelector.authorInput.checkValidity()) {
+        HtmlSelector.authorInput.classList.add('invalid');
+      }
+      if (!HtmlSelector.pagesInput.checkValidity()) {
+        HtmlSelector.pagesInput.classList.add('invalid');
+      }
     });
   };
 
